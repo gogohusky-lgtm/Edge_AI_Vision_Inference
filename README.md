@@ -1,11 +1,12 @@
 # **Edge AI model optimization and deployment on Raspberry Pi 5**
 ## Executive Summary
 
-This project demonstrates an end-to-end edge AI workflow, from model training and quantization on PC to real-time inference deployment on Raspberry Pi 5.
-Multiple TensorFlow Lite models (FP32, FP16, INT8 PTQ, INT8 QAT) are systematically compared in terms of latency, CPU usage, and inference accuracy.
-The project focuses on practical engineering trade-offs in edge deployment rather than achieving maximum model accuracy.
-A lightweight GPIO-based LED output is used to visualize inference decisions on-device.
-This repository is intended as a hands-on portfolio project for embedded / edge AI engineering roles.
+This project demonstrates an end-to-end edge AI workflow, from model training and quantization on PC to real-time inference deployment on Raspberry Pi 5. Multiple TensorFlow Lite models (FP32, FP16, INT8 PTQ, INT8 QAT) are systematically compared in terms of latency, CPU usage, and inference accuracy.
+
+The project emphasizes practical engineering trade-offs in edge deployment rather than pursuing maximum model accuracy. A lightweight GPIO-based LED output is used to visualize inference decisions directly on-device.
+
+This repository serves as a practical workflow example for model optimization and on-device inference on Raspberry Pi 5, with real-time GPIO feedback, tailored for embedded and edge AI engineering roles.
+
 
 ## Raspberry Pi 5 上的 Edge AI 模型最佳化與部署 (案例研究：貓 / 狗 影像分類)
 
@@ -33,7 +34,7 @@ This repository is intended as a hands-on portfolio project for embedded / edge 
 ![系統架構圖](docs/system_architecture.png)
 
 ## Demo video (Edge Inference on Raspberry Pi)
-Demo 影片展示於 RaspberryPi 5 上之即時離線推論。推論結果直接對應 GPIO 控制之 LED 以得到即時硬體回應。
+本影片展示在 Raspberry Pi 5 上進行即時推論，並透過 GPIO 輸出回饋。影片暫以 shorts 方式呈現。
 
 https://youtube.com/shorts/biKfEp-H_zw
 
@@ -69,6 +70,16 @@ https://youtube.com/shorts/biKfEp-H_zw
 - 分類準確率
 
 所有模型皆使用相同推論流程，以確保比較公平性。
+
+### 比較輸出
+
+| Model | Avg Latency (ms) | CPU % | Accuracy |
+| ----- | ---------------- | ----- | -------- |
+| FP32  | XX               | XX%   | XX%      |
+| FP16  | XX               | XX%   | XX%      |
+| PTQ   | XX               | XX%   | XX%      |
+| QAT   | XX               | XX%   | XX%      |
+
 
 ### GPIO 輸出（LED 對應）
 推論結果以三顆 LED 顯示：
@@ -130,6 +141,10 @@ PC 與 Raspberry Pi 5 端的軟體環境刻意分離，以符合實務中「模�
 4. 產生模型檔 INT8 QAT [QAT_CPU.py]
 5. 執行推論 [inference.py]
 
+預期之結果：
+- 資料集的前處理產出裁切影像（160x160）
+- 模型訓練（含多種量化策略）產出 .tflite 模型
+- Raspberry Pi 上部署及推論產出 GPIO LED 回饋
 
 ## 系統行為
 
