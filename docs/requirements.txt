@@ -1,0 +1,19 @@
+### PC ºÝ
+Python==3.8.10
+TensorFlow==2.10.0
+CUDA==11.2.2
+cuDNN=8.1.1
+NVIDIA driver >= 450.80.02
+TensorFlow Model Optimization Toolkit
+OpenCV==4.12.0.88
+NumPy==1.24.4
+Matplotlib
+
+# Raspberry Pi 5 ºÝ
+Python >= 3.9
+tflite-runtime==2.14.0
+lgpio
+numpy==1.26.4
+opencv-python==4.8.1.78
+psutil
+Matplotlib
