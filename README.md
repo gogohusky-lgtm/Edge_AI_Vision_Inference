@@ -75,10 +75,10 @@ https://youtube.com/shorts/biKfEp-H_zw
 
 | Model | Avg Latency (ms) | CPU % | Accuracy |
 | ----- | ---------------- | ----- | -------- |
-| FP32  | XX               | XX%   | XX%      |
-| FP16  | XX               | XX%   | XX%      |
-| PTQ   | XX               | XX%   | XX%      |
-| QAT   | XX               | XX%   | XX%      |
+| FP32  | 11.76            | 7.9   | 1.000    |
+| FP16  | 12.77            | 13.6  | 1.000    |
+| PTQ   | 22.53            | 6.0   | 1.000    |
+| QAT   | 21.34            | 7.8   | 0.950    |
 
 
 ### GPIO 輸出（LED 對應）
@@ -178,23 +178,94 @@ PC 與 Raspberry Pi 5 端的軟體環境刻意分離，以符合實務中「模�
 - 與 GPU / NPU 加速器進行比較
 
 ----
+----
+## RPi5 vs Jetson Nano 推論比較
+
+本節提供一個工程導向的比較，針對 **Raspberry Pi 5 (4GB)** 與 **Jetson Nano (2GB)** 在單張影像寵物分類任務上的表現。 此比較的目標並非追求最高基準分數， 而是評估在真實部署限制下的邊緣推論行為。
+
+### 比較範疇 
+- 任務：單張影像狗/貓分類 
+- 輸入：160×160 RGB 影像 
+- 情境：事件觸發推論 
+- 重點： 
+    - 延遲一致性 
+    - 系統穩定性 
+    - 記憶體限制 
+    - 可重現性
+
+由於 Jetson Nano 2GB 型號在執行時的記憶體限制， 批次推論 (>1) 被刻意排除。 
+
+---
+### 測試環境 
+
+| 裝置 | 記憶體 | 框架 | 後端 | 
+|------|--------|----------|---------| 
+| Raspberry Pi 5 | 4GB | TFLite | XNNPACK (CPU) | 
+| Jetson Nano | 2GB | TensorRT | CUDA | 
+
+### Models
+
+Jetson Nano 的 TensorRT 引擎是離線生成的， 並提供以確保結果的可重現性。 在裝置上重新建構引擎可能需要額外的記憶體， 且不包含在此資料庫中。
+
+--- 
+### 效能摘要 
+#### Raspberry Pi 5 (TFLite / XNNPACK) 
+
+| 精度 | 批次 | 平均延遲 (ms) | FPS | 準確率 | 
+|-------|------|--------|------|------| 
+| FP32 | 1 | ~12.4 | ~80.9 | 1.000 | 
+| FP32 | 100 | ~12.4 | ~80.5 | 1.000 | 
+| FP16 | 1 | ~12.4 | ~80.7 | 1.000 | 
+| FP16 | 100 | ~12.4 | ~80.8 | 1.000 | 
+| INT8 (PTQ) | 1 | ~21.4 | ~46.6 | 0.9969 | 
+| INT8 (QAT) | 1 | ~21.3 | ~47.0 | 0.9907 | 
+
+**觀察** 批次大小對延遲或吞吐量影響極小， 顯示推論行為受限於 CPU，且記憶體使用穩定。 
+
+--- 
+#### Jetson Nano 2GB (TensorRT) 
+| 精度 | 批次 | 平均延遲 (ms) | FPS | 準確率 | 
+|-----|------|---------|----|-----| 
+| FP32 | 1 | ~45.5 | ~22.0 | 1.000 | 
+| FP16 | 1 | ~43.1 | ~23.2 | 1.000 | 
+
+**觀察** Jetson Nano 可達成 GPU 加速推論， 但 2GB 型號的可用記憶體限制了批次推論的實用性。 批次推論 (>1) 導致執行時配置失敗 (`std::bad_alloc`)，因此未納入最終測量。 
+
+--- 
+### 工程結論 
+- **RPi5** 提供高度穩定且可重現的推論效能， 適合需要緊密整合的多任務邊緣系統。 
+- **Jetson Nano** 擅長 GPU 加速的單張影像推論， 但 2GB 型號的記憶體限制大幅限制了批次策略。 
+- RPi5 的 INT8 量化在準確率與推論效能間取得平衡， 是長時間邊緣部署的可行選項。 - 在產品導向的展示中， 系統穩定性與可解釋性優先於峰值吞吐量。 
+--- 
+### ✅ 結論 
+雖然 Jetson Nano 提供較低延遲的 GPU 推論， Raspberry Pi 5 在受限記憶體環境下展現更佳的系統穩健性與可擴展性。 對於即時、事件驅動的邊緣 AI 應用， RPi5 提供更可預測且可重現的部署平台。
+
 ## 檔案目錄結構
 ```text
 Edge_AI_model_optimization/
+├── benchmarks/
+│   ├── rpi5_full_results.csv
+│   ├── jetson_nano_full_results.csv
+│   └── methodology.md
+│
 ├── docs/
 │   ├── wiring.md
 │   ├── requirements.txt
 │   └── system_architecture.png
 │
 ├── edge_inference/
-│   ├── inference.py             # RPi5 推論與效能比較
+│   ├── inference.py             # RPi5 推論與效能
+│   ├── RPi5_inference.py        # 推論比較用(RPi5端)
+│   ├── Jetson_inference.py      # 推論比較用(Jetson端)
 │   └── class_indices.json       # 推論分類之標示
 │
 ├── models/
 │   ├── pet_classifier_fp32.tflite
 │   ├── pet_classifier_fp16.tflite
 │   ├── pet_classifier_int8_PTQ.tflite
-│   └── pet_classifier_int8_QAT_CPU.tflite
+│   ├── pet_classifier_int8_QAT_CPU.tflite
+│   ├── fp16.trt
+│   └── fp32.trt
 │
 ├── pc_pipeline/
 │   ├── Cropping_Group.py        # 依 XML 標註進行 ROI 裁切
@@ -203,6 +274,8 @@ Edge_AI_model_optimization/
 │   └── QAT_CPU.py               # CPU 上進行 INT8 QAT
 │
 ├── screenshots_demo
+│   ├── Comp_RPi5_summary.png    # 推論比較 summary 截圖 (RPi5端)
+│   ├── Comp_Jetson_summary.png  # 推論比較 summary 截圖 (Jetson端)
 │   └── inference_summary.png    # 推論 summary 截圖
 │
 ├── validation_backup/           # 推論用驗證照片
