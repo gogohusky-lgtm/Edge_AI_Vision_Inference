@@ -1,34 +1,38 @@
-# **Edge AI model optimization and deployment on Raspberry Pi 5**
+# Edge AI Model Optimization and Deployment on Raspberry Pi 5 (with an Engineering Comparison to Jetson Nano)
 ## Executive Summary
 
-This project demonstrates an end-to-end edge AI workflow, from model training and quantization on PC to real-time inference deployment on Raspberry Pi 5. Multiple TensorFlow Lite models (FP32, FP16, INT8 PTQ, INT8 QAT) are systematically compared in terms of latency, CPU usage, and inference accuracy.
+This project demonstrates an end-to-end edge AI workflow, covering model training, quantization, and real-time deployment on resource-constrained devices. The primary implementation targets **Raspberry Pi 5**, where multiple TensorFlow Lite models (FP32, FP16, INT8 PTQ, INT8 QAT) are systematically evaluated in terms of latency, inference accuracy, and deployment stability.
 
-The project emphasizes practical engineering trade-offs in edge deployment rather than pursuing maximum model accuracy. A lightweight GPIO-based LED output is used to visualize inference decisions directly on-device.
+Beyond pure inference benchmarking, the project emphasizes **practical engineering trade-offs** in edge AI deployment rather than pursuing maximum model accuracy. A lightweight GPIO-based LED output is integrated on Raspberry Pi 5 to provide real-time, on-device visualization of inference decisions, demonstrating a complete sense-to-action pipeline suitable for embedded applications.
 
-This repository serves as a practical workflow example for model optimization and on-device inference on Raspberry Pi 5, with real-time GPIO feedback, tailored for embedded and edge AI engineering roles.
+As an extension, this repository also includes a **comparative inference study**
+between Raspberry Pi 5 (4GB) and Jetson Nano (2GB) under a single-image, event-driven inference scenario. While Jetson Nano achieves GPU-accelerated inference using TensorRT (FP32/FP16), batch inference on the 2GB model was found to be constrained by runtime memory limitations and was therefore excluded from final benchmarks.
+TensorRT engines are generated offline and included for reproducibility, with the comparison focusing on system-level behavior rather than low-level build optimization.
+
+Overall, this repository serves both as:
+- a **practical reference workflow** for model optimization and GPIO-integrated
+  edge inference on Raspberry Pi 5, and
+- an **engineering-oriented comparison** illustrating how platform constraints
+  influence real-world edge AI deployment decisions.
+
+The project is tailored for embedded and edge AI engineering roles, highlighting
+reproducibility, system integration, and informed engineering trade-offs under
+real-world hardware constraints.
+
+## Raspberry Pi 5 上的 Edge AI 模型最佳化與部署 (及與Jetson Nano的工程比較) 
 
 
-## Raspberry Pi 5 上的 Edge AI 模型最佳化與部署 (案例研究：貓 / 狗 影像分類)
+本專案展示了一個端到端的邊緣 AI 工作流程，涵蓋模型訓練、量化，以及在資源受限裝置上的即時部署。 主要的實作目標是 **Raspberry Pi 5**，在此平台上系統性地評估多個 TensorFlow Lite 模型（FP32、FP16、INT8 PTQ、INT8 QAT）， 比較其延遲、推論準確率與部署穩定性。 
 
-本專案展示一個完整的 Edge AI 工作流程，重點放在 模型最佳化、部署，以及在 Raspberry Pi 5 上的效能比較。
+除了單純的推論基準測試之外，本專案更強調邊緣 AI 部署中的 **實用工程取捨**，而非追求最大化的模型準確率。 在 Raspberry Pi 5 上整合了一個輕量化的 GPIO LED 輸出，用於即時顯示推論結果，展現完整的「感知到動作」流程， 適用於嵌入式應用。 
 
-與其打造一個完整的消費性產品，本專案刻意將主軸放在：
+作為延伸，本專案也包含 **推論比較研究**，針對 Raspberry Pi 5 (4GB) 與 Jetson Nano (2GB) 在單張影像、事件驅動推論情境下的表現。 雖然 Jetson Nano 能透過 TensorRT (FP32/FP16) 達成 GPU 加速推論， 但在 2GB 型號上批次推論受到執行時記憶體限制，因此未納入最終基準測試。 TensorRT 引擎是離線生成並提供，以確保結果的可重現性， 比較重點放在系統層級行為，而非低階建構最佳化。 
 
-- 原始資料集的前處理流程
-- 模型訓練與不同量化策略之四種模型格式：
-    - FP32
-    - FP16
-    - INT8 (Post-Training Quantization, PTQ)
-    - INT8 (Quantization-Aware Training, QAT)
-- 在資源受限的邊緣裝置上進行推論
-- 比較並量測：
-    - 推論延遲(latency)
-    - CPU 使用率
-    - 分類準確率
-- 驗證 `tflite-runtime` 在邊緣裝置上的實務限制
-- 整合 GPIO 輸出，以 LED 顯示推論結果
+整體而言，本專案同時作為： 
+- 一個 **實用的參考工作流程**，用於 Raspberry Pi 5 上的模型最佳化與 GPIO 整合邊緣推論 
+- 一個 **工程導向的比較**，說明平台限制如何影響真實世界的邊緣 AI 部署決策。 
 
-貓 / 狗分類僅作為案例情境，用來探討實務中 Edge AI 系統的取捨與限制。
+此專案特別針對嵌入式與邊緣 AI 工程角色設計，著重於在真實硬體限制下的可重現性、系統整合， 以及有根據的工程取捨。。貓 / 狗分類僅作為案例情境。
 
 ## 系統架構
 ![系統架構圖](docs/system_architecture.png)
@@ -176,9 +180,13 @@ PC 與 Raspberry Pi 5 端的軟體環境刻意分離，以符合實務中「模�
 - 整合相機進行即時影像推論
 - 匯出效能比較結果為 CSV
 - 與 GPU / NPU 加速器進行比較
+----
+----
 
-----
-----
+### Note:
+> Raspberry Pi 5 的實作代表本專案主要的端到端邊緣 AI 工作流程，包含 GPIO 整合推論。 
+> 以下的 Jetson Nano 的結果僅作為工程比較，用來說明平台特定的限制，並非完整的系統實作。
+
 ## RPi5 vs Jetson Nano 推論比較
 
 本節提供一個工程導向的比較，針對 **Raspberry Pi 5 (4GB)** 與 **Jetson Nano (2GB)** 在單張影像寵物分類任務上的表現。 此比較的目標並非追求最高基準分數， 而是評估在真實部署限制下的邊緣推論行為。
@@ -235,7 +243,8 @@ Jetson Nano 的 TensorRT 引擎是離線生成的， 並提供以確保結果的
 ### 工程結論 
 - **RPi5** 提供高度穩定且可重現的推論效能， 適合需要緊密整合的多任務邊緣系統。 
 - **Jetson Nano** 擅長 GPU 加速的單張影像推論， 但 2GB 型號的記憶體限制大幅限制了批次策略。 
-- RPi5 的 INT8 量化在準確率與推論效能間取得平衡， 是長時間邊緣部署的可行選項。 - 在產品導向的展示中， 系統穩定性與可解釋性優先於峰值吞吐量。 
+- RPi5 的 INT8 量化在準確率與推論效能間取得平衡， 是長時間邊緣部署的可行選項。 
+- 在產品導向的展示中， 系統穩定性與可解釋性優先於峰值吞吐量。 
 --- 
 ### ✅ 結論 
 雖然 Jetson Nano 提供較低延遲的 GPU 推論， Raspberry Pi 5 在受限記憶體環境下展現更佳的系統穩健性與可擴展性。 對於即時、事件驅動的邊緣 AI 應用， RPi5 提供更可預測且可重現的部署平台。
