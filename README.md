@@ -56,7 +56,7 @@ https://youtube.com/shorts/biKfEp-H_zw
 
 系統架構：
 
-![系統架構圖](docs/system_archi.png)
+![系統架構圖](docs/system_arch.png)
 
 ---
 
