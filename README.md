@@ -238,4 +238,5 @@ The source code in this repository is released under the MIT License.
 Demo materials, including videos, photos, logs, and generated data under the following directories are provided for demonstration purposes only and are NOT covered by the MIT License:
 
 screenshots_demo/
+
 These materials may not be redistributed or reused without explicit permission.
