@@ -1,0 +1,108 @@
+[1]. after LXDE login / stop lightdm / drop VM caches / free -m / fp16 inference
+              total        used        free      shared  buff/cache   available
+Mem:           1979         223        1583          13         173        1667
+Swap:          5085           0        5085
+
+Loading engine...
+Engine loaded
+Cold start inference...
+Cold start latency: 5133.73 ms
+Running steady-state inference (10 runs)...
+----------------------------------------
+Images processed: 1 (repeated 10 times)
+Steady-state avg latency: 22.91 ms
+Steady-state min latency: 10.01 ms
+Output logits: [  4.36472828e-06   3.72276105e-07   9.99995232e-01]
+Pred class: 2
+----------------------------------------
+
+[2]. Immediately after fp16 inference / free -m / fp32 inference
+              total        used        free      shared  buff/cache   available
+Mem:           1979         436         976          11         565        1663
+Swap:          5085          12        5073
+
+Loading engine...
+Engine loaded
+Cold start inference...
+Cold start latency: 1636.27 ms
+Running steady-state inference (10 runs)...
+----------------------------------------
+Images processed: 1 (repeated 10 times)
+Steady-state avg latency: 22.15 ms
+Steady-state min latency: 10.06 ms
+Output logits: [  4.35623087e-06   3.67824128e-07   9.99995232e-01]
+Pred class: 2
+----------------------------------------
+
+[3].  Immediately after fp32 inference / free -m / fp16 inference
+              total        used        free      shared  buff/cache   available
+Mem:           1979         461         947          10         570        1664
+Swap:          5085          14        5071
+
+Loading engine...
+Engine loaded
+Cold start inference...
+Cold start latency: 1432.71 ms
+Running steady-state inference (10 runs)...
+----------------------------------------
+Images processed: 1 (repeated 10 times)
+Steady-state avg latency: 16.60 ms
+Steady-state min latency: 12.41 ms
+Output logits: [  4.36472828e-06   3.72276105e-07   9.99995232e-01]
+Pred class: 2
+----------------------------------------
+
+[4]. Immediately after fp16 inference / free -m / fp32 inference
+              total        used        free      shared  buff/cache   available
+Mem:           1979         456         954          10         568        1664
+Swap:          5085          15        5070
+
+Loading engine...
+Engine loaded
+Cold start inference...
+Cold start latency: 1443.32 ms
+Running steady-state inference (10 runs)...
+----------------------------------------
+Images processed: 1 (repeated 10 times)
+Steady-state avg latency: 24.40 ms
+Steady-state min latency: 13.74 ms
+Output logits: [  4.35623087e-06   3.67824128e-07   9.99995232e-01]
+Pred class: 2
+----------------------------------------
+[5]. reboot / LXDE login / free -m / fp16 inference / free -m / fp32 inference
+
+amuro@Jnano:~/Desktop/Onnx$ free -m
+              total        used        free      shared  buff/cache   available
+Mem:           1979         497         849          14         631        1386
+Swap:          5085           0        5085
+amuro@Jnano:~/Desktop/Onnx$ python3 infer.py fp16.trt
+Loading engine...
+Engine loaded
+Cold start inference...
+Cold start latency: 6019.30 ms
+Running steady-state inference (10 runs)...
+----------------------------------------
+Images processed: 1 (repeated 10 times)
+Steady-state avg latency: 15.43 ms
+Steady-state min latency: 9.29 ms
+Output logits: [  4.36472828e-06   3.72276105e-07   9.99995232e-01]
+Pred class: 2
+----------------------------------------
+amuro@Jnano:~/Desktop/Onnx$ free -m
+              total        used        free      shared  buff/cache   available
+Mem:           1979         701         926           7         351        1404
+Swap:          5085          42        5043
+
+amuro@Jnano:~/Desktop/Onnx$ python3 infer.py fp32.trt
+Loading engine...
+Engine loaded
+Cold start inference...
+Cold start latency: 3326.13 ms
+Running steady-state inference (10 runs)...
+----------------------------------------
+Images processed: 1 (repeated 10 times)
+Steady-state avg latency: 20.65 ms
+Steady-state min latency: 11.36 ms
+Output logits: [  4.35623087e-06   3.67824128e-07   9.99995232e-01]
+Pred class: 2
+----------------------------------------
