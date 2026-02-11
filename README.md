@@ -31,7 +31,8 @@
 示範影片：https://youtube.com/shorts/biKfEp-H_zw
 
 
-本專案另有容器化的展示，可參考 https://github.com/gogohusky-lgtm/Dockerized_Edge_AI_Vision_Inference
+本專案另有容器化的展示，可參考 https://github.com/gogohusky-lgtm/Edge_AI_Inference_dockerized
+
 
 ---
 技術細節、benchmark 測試與實作紀錄如下
