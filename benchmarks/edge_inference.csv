@@ -1,23 +1,23 @@
-Device,Available memory,Mode,Precision,Cold start(ms),Avg latency(ms),Min latency(ms),FPS,Accuracy,Remark
-RPi5,,Desktop,FP32,14.58,12.37,,80.87,1,
-RPi5,,Desktop,FP16,15.05,12.40,,80.67,1,
-RPi5,,Desktop,INT8_PTQ,20.91,21.44,,46.64,0.9969,
-RPi5,,Desktop,INT8_QAT,33.63,21.28,,46.99,0.9907,
-Jetson Nano,,Desktop,FP32,10975.70,45.53,,21.96,1,before 優化
-Jetson Nano,,Desktop,FP16,5596.20,43.10,,23.20,1,before 優化
---以下是先跑FP16，再跑FP32,,,,,,,,,
-Jetson Nano,1667 MB,CLI,FP16,5133.73,22.91,10.01,,,1st run after reboot
-Jetson Nano,1663 MB,CLI,FP32,1636.27,22.15,10.06,,,2nd run after reboot
-Jetson Nano,1664 MB,CLI,FP16,1432.71,16.60,12.41,,,3rd run after reboot
-Jetson Nano,1664 MB,CLI,FP32,1443.32,24.40,13.74,,,4th run after reboot
---reboot後再執行,,,,,,,,,
-Jetson Nano,1386 MB,Desktop,FP16,6019.30,15.43,9.29,,,1st run after reboot
-Jetson Nano,1404 MB,Desktop,FP32,3326.13,20.65,11.36,,,2nd run after reboot
---以下是先跑FP32，再跑FP16,,,,,,,,,
-Jetson Nano,1644 MB,CLI,FP32,5120.02,15.59,10.22,,,1st run after reboot
-Jetson Nano,1639 MB,CLI,FP16,1410.82,19.91,14.63,,,2nd run after reboot
-Jetson Nano,1639 MB,CLI,FP32,1675.95,21.17,10.21,,,3rd run after reboot
-Jetson Nano,1640 MB,CLI,FP16,1676.09,26.28,9.98,,,4th run after reboot
---reboot後再執行,,,,,,,,,
-Jetson Nano,1386 MB,Desktop,FP32,7215.71,31.89,10.87,,,1st run after reboot
-Jetson Nano,1404 MB,Desktop,FP16,4037.37,22.31,10.10,,,2nd run after reboot
+Device,Available memory,Mode,Precision,Cold start(ms),Avg latency(ms),Min latency(ms),FPS,Accuracy,Logits,Remark
+RPi5,NA,Desktop,FP32,14.58,12.37,NA,80.87,1,NA,NA
+RPi5,NA,Desktop,FP16,15.05,12.4,NA,80.67,1,NA,NA
+RPi5,NA,Desktop,INT8_PTQ,20.91,21.44,NA,46.64,0.9969,NA,NA
+RPi5,NA,Desktop,INT8_QAT,33.63,21.28,NA,46.99,0.9907,NA,NA
+Jetson Nano,NA,Desktop,FP32,10975.7,45.53,NA,21.96,1,NA,before 優化
+Jetson Nano,NA,Desktop,FP16,5596.2,43.1,NA,23.2,1,NA,before 優化
+--以下是先跑FP16，再跑FP32,,,,,,,,,,
+Jetson Nano,1667 MB,CLI,FP16,5133.73,22.91,10.01,NA,NA,1,1st run after reboot
+Jetson Nano,1663 MB,CLI,FP32,1636.27,22.15,10.06,NA,NA,1,2nd run after reboot
+Jetson Nano,1664 MB,CLI,FP16,1432.71,16.6,12.41,NA,NA,1,3rd run after reboot
+Jetson Nano,1664 MB,CLI,FP32,1443.32,24.4,13.74,NA,NA,1,4th run after reboot
+--reboot後再執行,,,,,,,,,,
+Jetson Nano,1386 MB,Desktop,FP16,6019.3,15.43,9.29,NA,NA,1,1st run after reboot
+Jetson Nano,1404 MB,Desktop,FP32,3326.13,20.65,11.36,NA,NA,1,2nd run after reboot
+--以下是先跑FP32，再跑FP16,,,,,,,,,,
+Jetson Nano,1644 MB,CLI,FP32,5120.02,15.59,10.22,NA,NA,1,1st run after reboot
+Jetson Nano,1639 MB,CLI,FP16,1410.82,19.91,14.63,NA,NA,1,2nd run after reboot
+Jetson Nano,1639 MB,CLI,FP32,1675.95,21.17,10.21,NA,NA,1,3rd run after reboot
+Jetson Nano,1640 MB,CLI,FP16,1676.09,26.28,9.98,NA,NA,1,4th run after reboot
+--reboot後再執行,,,,,,,,,,
+Jetson Nano,1386 MB,Desktop,FP32,7215.71,31.89,10.87,NA,NA,1,1st run after reboot
+Jetson Nano,1404 MB,Desktop,FP16,4037.37,22.31,10.1,NA,NA,1,2nd run after reboot
