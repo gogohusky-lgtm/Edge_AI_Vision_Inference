@@ -31,6 +31,7 @@
 Demo（Raspberry Pi 5）
 
 展示從感知 → 推論 → 硬體動作的完整閉環，模擬實際邊緣設備中的即時控制流程。
+
 https://youtube.com/shorts/biKfEp-H_zw
 
 
@@ -125,12 +126,12 @@ https://github.com/gogohusky-lgtm/Edge_AI_Inference_dockerized
 
 ---
 
-## 方法論與完整基準測試
+## 方法論與完整 Benchmark 測試
 
 完整結果請參考：
 
 - `benchmarks/master.csv`
-- `benchmarks/method.md`
+- `benchmarks/benchmark_design.md`
 
 ---
 
@@ -148,16 +149,19 @@ https://github.com/gogohusky-lgtm/Edge_AI_Inference_dockerized
 
 ```text
 Edge_AI_model_optimization/
+│
 ├── benchmarks/
 │   ├── master.csv
 │   └── benchmark_design.md
 │
 ├── docs/
-│   ├── wiring.md
 │   ├── mem_log_fp16_CLI.txt     # 推論記錄 Log(CLI)
 │   ├── mem_log_fp16_Desktop.txt # 推論記錄 Log(Desktop)
 │   ├── process_CLI.sh           # shell script 範例 (process_CLI)
+│   ├── wiring.md
 │   ├── system_architecture.png
+│   ├── Fig1_cold_breakdown.png
+│   ├── Fig2_convergence_curve.png
 │   ├── 20260217_10h48m03s_grim.png  # RPi5 desktop 推論截圖範例
 │   └── session_fp32.log         # Jetson CLI 推論 script log 範例
 │
@@ -191,7 +195,7 @@ The source code in this repository is released under the MIT License.
 
 Demo materials, including videos, photos, logs, and generated data under the following directories are provided for demonstration purposes only and are NOT covered by the MIT License:
 
-screenshots_demo/
+docs/
 
 These materials may not be redistributed or reused without explicit permission.
 
