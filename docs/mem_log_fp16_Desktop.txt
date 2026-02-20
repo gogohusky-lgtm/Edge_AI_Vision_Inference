@@ -1,0 +1,198 @@
+==================================
+=== Reboot Cold ===
+三  2月 18 10:18:48 CST 2026
+Linux Jnano 4.9.337-tegra #1 SMP PREEMPT Mon Nov 4 23:41:41 PST 2024 aarch64 aarch64 aarch64 GNU/Linux
+Python 3.6.9
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         510         823          14         646        1377
+Swap:          5085           0        5085
+reboot_cold latency: 5701.26 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         684         972           7         323        1422
+Swap:          5085          59        5026
+==================================
+==================================
+=== Reboot Cold ===
+三  2月 18 10:20:48 CST 2026
+Linux Jnano 4.9.337-tegra #1 SMP PREEMPT Mon Nov 4 23:41:41 PST 2024 aarch64 aarch64 aarch64 GNU/Linux
+Python 3.6.9
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         512         817          14         649        1377
+Swap:          5085           0        5085
+reboot_cold latency: 5764.80 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         713         976           7         289        1394
+Swap:          5085          35        5050
+==================================
+==================================
+=== Reboot Cold ===
+三  2月 18 10:22:31 CST 2026
+Linux Jnano 4.9.337-tegra #1 SMP PREEMPT Mon Nov 4 23:41:41 PST 2024 aarch64 aarch64 aarch64 GNU/Linux
+Python 3.6.9
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         506         822          14         650        1381
+Swap:          5085           0        5085
+reboot_cold latency: 5766.27 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         700         969           6         309        1399
+Swap:          5085          40        5045
+==================================
+==================================
+=== Reboot Cold ===
+三  2月 18 10:24:16 CST 2026
+Linux Jnano 4.9.337-tegra #1 SMP PREEMPT Mon Nov 4 23:41:41 PST 2024 aarch64 aarch64 aarch64 GNU/Linux
+Python 3.6.9
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         492         844          14         643        1399
+Swap:          5085           0        5085
+reboot_cold latency: 5835.26 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         688         968           7         322        1413
+Swap:          5085          35        5049
+==================================
+==================================
+=== Reboot Cold ===
+三  2月 18 10:26:19 CST 2026
+Linux Jnano 4.9.337-tegra #1 SMP PREEMPT Mon Nov 4 23:41:41 PST 2024 aarch64 aarch64 aarch64 GNU/Linux
+Python 3.6.9
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         498         832          14         648        1388
+Swap:          5085           0        5085
+reboot_cold latency: 5665.67 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         677         974           7         327        1430
+Swap:          5085          44        5040
+==================================
+==================================
+=== Process Cold ===
+三  2月 18 10:27:00 CST 2026
+=== Process Cold Run 1 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         678         925           7         375        1429
+Swap:          5085          44        5041
+process_cold latency: 2907.35 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         646         937           4         396        1459
+Swap:          5085          85        5000
+=== Process Cold Run 2 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         646         936           4         396        1459
+Swap:          5085          85        5000
+process_cold latency: 1991.18 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         618         958           3         403        1504
+Swap:          5085         146        4938
+=== Process Cold Run 3 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         618         958           3         403        1504
+Swap:          5085         146        4938
+process_cold latency: 1438.05 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         613         989           2         376        1513
+Swap:          5085         159        4926
+=== Process Cold Run 4 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         613         990           2         376        1513
+Swap:          5085         159        4926
+process_cold latency: 1690.99 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         610        1009           2         360        1518
+Swap:          5085         172        4913
+=== Process Cold Run 5 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         610        1009           2         360        1518
+Swap:          5085         172        4913
+process_cold latency: 1665.60 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         602        1009           2         368        1526
+Swap:          5085         182        4903
+=== Process Cold Run 6 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         599        1011           2         368        1529
+Swap:          5085         182        4903
+process_cold latency: 1421.90 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         596         993           2         389        1532
+Swap:          5085         190        4894
+=== Process Cold Run 7 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         596         993           2         389        1532
+Swap:          5085         190        4894
+process_cold latency: 1496.52 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         589        1010           2         379        1539
+Swap:          5085         198        4887
+=== Process Cold Run 8 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         589        1010           2         379        1539
+Swap:          5085         198        4887
+process_cold latency: 1414.91 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         592        1006           2         380        1537
+Swap:          5085         198        4887
+=== Process Cold Run 9 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         592        1006           2         380        1536
+Swap:          5085         198        4887
+process_cold latency: 1416.63 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         592        1006           2         380        1537
+Swap:          5085         198        4887
+=== Process Cold Run 10 ===
+[Before Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         592        1006           2         380        1537
+Swap:          5085         198        4887
+process_cold latency: 1406.25 ms
+[After Inference]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         587        1019           1         373        1539
+Swap:          5085         200        4885
+==================================
+==================================
+=== Steady State Phase ===
+三  2月 18 10:29:21 CST 2026
+[Before Steady]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         587        1001           1         390        1540
+Swap:          5085         198        4887
+
+=== STEADY STATE ===
+Mean: 13.80 ms
+Median: 9.31 ms
+Std: 10.41 ms
+Min: 8.03 ms
+Max: 40.45 ms
+[After Steady]
+              total        used        free      shared  buff/cache   available
+Mem:           1979         593         996           1         390        1535
+Swap:          5085         198        4887
+==================================

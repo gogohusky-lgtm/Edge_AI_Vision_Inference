@@ -3,18 +3,20 @@
 
 > 核心問題：在 2GB 記憶體 GPU 裝置上，GPU 加速是否真的能降低事件驅動型推論的實際延遲？
 
----
+> 結論顯示：在低記憶體 GPU 裝置上，冷啟動成本往往主導事件驅動型應用的實際延遲，GPU 並非必然更快。
 
 ## 專案概述
 
-本專案是一個端到端的邊緣 AI 工程案例研究，從模型訓練與量化，到嵌入式裝置部署與系統層級行為分析。說明了**模型最佳化、runtime 狀態，以及系統記憶體限制**如何共同決定邊緣裝置上的真實推論效能。
+本專案是一個端到端的邊緣 AI 工程案例研究，涵蓋：
+- 模型訓練、量化與優化
+- 嵌入式裝置部署 (RPi5 / Jetson Nano)
+- 系統層級行為觀察（延遲、冷啟動、記憶體使用）
 
-與追求最高 FPS 不同，本專案聚焦於：
-
-- 事件驅動 (batch=1) 推論場景
+焦點不在追求最高 FPS，而是 事件驅動 (batch=1) 場景的延遲穩定性：
 - 冷啟動延遲成本
-- 記憶體限制對 runtime 行為的影響
-- CPU 與 GPU 在實際部署下的取捨
+- Steady-state 延遲收斂
+- 記憶體限制下的 Runtime 行為
+- CPU vs GPU 實際部署差異
 
 測試任務：貓 / 狗 / 其他 影像分類 (160×160 RGB)
 
@@ -23,37 +25,81 @@
 - Raspberry Pi 5 (4GB) – TensorFlow Lite (CPU, XNNPACK)
 - Jetson Nano (2GB) – TensorRT (GPU)
 
----
+## 專案分兩部份
+## Part I. RPi5 Sense-to-Action 展示
 
-## 主要工程發現
+Demo（Raspberry Pi 5）
 
+展示從感知 → 推論 → 硬體動作的完整閉環，模擬實際邊緣設備中的即時控制流程。
+https://youtube.com/shorts/biKfEp-H_zw
+
+
+
+| 精度 | 冷啟延遲 (ms) | 平均延遲 (ms) | 準確率 |
+|------|---------------|---------------|--------|
+| FP32 | ~14.6 | ~12.4 | 1.000 |
+| FP16 | ~15.1 | ~12.4 | 1.000 |
+| INT8 PTQ | ~20.9 | ~21.4 | 0.9969 |
+| INT8 QAT | ~33.6 | ~21.3 | 0.9907 |
+
+觀察：
+- 延遲高度穩定、可預測
+- CPU 上量化未必能加速
+- 適合長時間穩定運行的邊緣任務
+
+## Part II. RPi5 vs Jetson Nano 性能比較
+- 分析 reboot / process cold 與 steady latency
+- 強調記憶體與 runtime 行為對事件驅動延遲的影響
+
+工程決策指引
 - Raspberry Pi 5 提供穩定且可預測的延遲行為。
 - Jetson Nano 在 2GB 記憶體限制下，效能受 runtime 初始化與系統狀態顯著影響。
-- GPU 加速 ≠ 一定更低延遲。
 - 冷啟動成本在事件觸發型應用中具有關鍵影響。
 
 ---
 
-## 結果快照（Batch = 1）
+### 結果快照（Batch = 1）
+1. 冷啟動成本
+- Jetson Nano 快，但對 Reboot_cold (初次啟動) / Process_cold (Warm start) 非常敏感
+- RPi5 steady latency 穩定，冷啟動成本小
 
-| 平台 | 冷啟動 | 穩態延遲 | 關鍵特性 |
-|------|--------|----------|----------|
-| RPi5 (CPU) | ~15 ms | ~12 ms | 穩定、可預測 |
-| Jetson Nano (GPU) | 1.4–10 秒 | 15–25 ms | Runtime & 記憶體主導 |
+![冷啟動及穩態比較](docs/Fig1_cold_breakdown.png)
 
-### Quantitative Takeaways
+2. 穩態的 Warm-up 效應
+- Jetson Nano 在 steady phase 表現優勢，但前 5 次 warm-up 波動較大
+- RPi5 延遲平滑，收斂迅速且穩定
 
-- Jetson Nano 冷啟動延遲為 RPi5 的約 100–700 倍。
-- 記憶體最佳化後，Jetson 平均延遲由 ~45ms 改善至 ~15–25ms。
-- 冷啟動延遲主要由 TensorRT engine 載入與 CUDA context 初始化主導。
+![穩態收歛比較](docs/Fig2_convergence_curve.png)
 
----
+3. 平台層級之 Memory Footprint (Steady Batch)
+- 數值代表批次初始化階段的佔用量變化，而非每次迭代的波動。
+- 此數值為平台初始化策略的觀察結果，並非應用程式可直接控制之參數。
+- 此表格補充圖 1 與圖 2，展示平台層級的資源管理行為。
 
-## Demo（Raspberry Pi 5）
+| Platform   |   Mem_Delta (MB) | 狀態 |
+|-----------|------------|---|
+| JetAfter   |         -51 |積極回收記憶體|
+| JetBefore  |           7 |輕微增加|
+| RPi5       |          36 |大部分被保留|
 
-展示從感知 → 推論 → 硬體動作的完整閉環，模擬實際邊緣設備中的即時控制流程。
 
-https://youtube.com/shorts/biKfEp-H_zw
+4. 系統反應效率 Summary
+- Jetson：Cold start 成本是 steady 的 200~500 倍
+- RPi5：Cold start 幾乎沒有成本差異。
+
+| Platform   |   Reboot_Cold (ms) |   Process_Cold (ms) |   Steady_Late (ms) |  Reboot/Steady_Ratio |   Process/Steady_Ratio |
+|------------|-------------------|--------------------|-------------------|--------------------|-----------------------|
+| JetAfter   |            4476.11 |             4166.58 |               8.79 |               509.2 |                  473.9 |
+| JetBefore  |            4418.14 |             4078.76 |              18.69 |               236.4 |                  218.2 |
+| RPi5       |              14.77 |               15.81 |              11.41 |                 1.3 |                    1.4 |
+
+
+
+### 主要工程結論
+- 在 batch=1 事件驅動場景下，GPU 的 steady latency 優勢會被 cold start 成本放大抵消。
+- 在低記憶體 GPU 裝置（2GB）上，runtime 初始化成本是主導因素。
+- 若系統頻繁啟動/零星啟動，CPU 平台可能更合適。
+- 若為高 throughput、長時間運行場景，GPU steady phase 才會展現優勢。
 
 ---
 
@@ -64,61 +110,7 @@ https://youtube.com/shorts/biKfEp-H_zw
 - 推論模式：事件驅動 (batch=1)
 - 重點：延遲、冷啟動、記憶體限制
 
-![系統架構圖](docs/system_arch.png)
-
----
-
-# 工程比較與洞察
-
-## 1. Raspberry Pi 5 — TensorFlow Lite (CPU)
-
-| 精度 | 冷啟延遲 (ms) | 平均延遲 (ms) | 準確率 |
-|------|---------------|---------------|--------|
-| FP32 | ~14.6 | ~12.4 | 1.000 |
-| FP16 | ~15.1 | ~12.4 | 1.000 |
-| INT8 PTQ | ~20.9 | ~21.4 | 0.9969 |
-| INT8 QAT | ~33.6 | ~21.3 | 0.9907 |
-
-**觀察：**
-
-- 延遲高度穩定
-- 量化在 CPU 上不保證加速
-- 適合長時間穩定運行
-
----
-
-## 2. Jetson Nano (2GB) — TensorRT (GPU)
-
-### 記憶體最佳化前
-
-| 精度 | 冷啟延遲 (ms) | 平均延遲 (ms) |
-|------|---------------|---------------|
-| FP16 | ~5,596 | ~43.1 |
-| FP32 | ~10,976 | ~45.5 |
-
-### 記憶體最佳化後
-
-| 精度 | 冷啟延遲 (ms) | 平均延遲 (ms) |
-|------|---------------|---------------|
-| FP16 | ~1,411–6,019 | ~15–26 |
-| FP32 | ~1,443–7,215 | ~16–32 |
-
-**Runtime 關鍵洞察：**
-
-- 記憶體與 workspace 設定顯著影響 engine 行為。
-- 冷啟動由 CUDA context 初始化主導。
-- FP16 不一定在所有 runtime 狀態下優於 FP32。
-- 在 2GB RAM 下，batch=1 是較穩定的部署選擇。
-
----
-
-# 工程結論
-
-- 在低記憶體 GPU 裝置上，系統行為往往比模型精度更影響延遲。
-- 冷啟動延遲在事件驅動系統中不可忽略。
-- 可預測性與部署穩定性往往比峰值吞吐量更重要。
-
----
+![系統架構圖](docs/system_architecture.png)
 
 ## Deployment & Reproducibility
 
@@ -137,8 +129,8 @@ https://github.com/gogohusky-lgtm/Edge_AI_Inference_dockerized
 
 完整結果請參考：
 
-- `benchmarks/edge_inference.csv`
-- `benchmarks/methodology.md`
+- `benchmarks/master.csv`
+- `benchmarks/method.md`
 
 ---
 
@@ -157,19 +149,23 @@ https://github.com/gogohusky-lgtm/Edge_AI_Inference_dockerized
 ```text
 Edge_AI_model_optimization/
 ├── benchmarks/
-│   ├── edge_inference.csv
-│   └── methodology.md
+│   ├── master.csv
+│   └── benchmark_design.md
 │
 ├── docs/
 │   ├── wiring.md
-│   ├── requirements.txt
-│   ├── system_arch.png
-│   └── system_architecture.png
+│   ├── mem_log_fp16_CLI.txt     # 推論記錄 Log(CLI)
+│   ├── mem_log_fp16_Desktop.txt # 推論記錄 Log(Desktop)
+│   ├── process_CLI.sh           # shell script 範例 (process_CLI)
+│   ├── system_architecture.png
+│   ├── 20260217_10h48m03s_grim.png  # RPi5 desktop 推論截圖範例
+│   └── session_fp32.log         # Jetson CLI 推論 script log 範例
 │
 ├── edge_inference/
-│   ├── inference.py             # RPi5 推論與效能
-│   ├── RPi5_inference.py        # 推論比較用(RPi5端)
-│   ├── Jetson_inference.py      # 推論比較用(Jetson端)
+│   ├── inference.py             # Sense-to-action RPi5 推論與效能
+│   ├── infer_RPi5.py            # 推論比較用(RPi5端)
+│   ├── infer_Jetson.py          # 推論比較用(Jetson端)
+│   ├── list.json                # 推論比較用檔案 list
 │   └── class_indices.json       # 推論分類之標示
 │
 ├── models/
@@ -181,19 +177,8 @@ Edge_AI_model_optimization/
 │   └── fp32.trt                 # 優化後FP32 engine
 │
 ├── pc_pipeline/
-│   ├── Cropping_Group.py        # 依 XML 標註進行 ROI 裁切
-│   ├── resize.py                # 影像調整為 160x160
 │   ├── Training.py              # FP32 / FP16 / PTQ 模型訓練
-│   └── QAT_CPU.py               # CPU 上進行 INT8 QAT
-│
-├── screenshots_demo
-│   ├── Comp_RPi5_summary.png        # 推論比較 summary 截圖 (RPi5端)
-│   ├── Comp_Jetson_bfr_summary.png  # 優化前推論比較 summary 截圖 (Jetson端)
-│   ├── Jetson_run-1.txt             # 優化後推論比較綜整 (Jetson端,CLI[1]~[4],Desktop[5], FP16先跑)
-│   ├── Jetson_run-2.txt             # 優化後推論比較綜整 (Jetson端,CLI[1]~[4],Desktop[5], FP32先跑)
-│   ├── Comp_Jetson_aft_summary-1.png  # 優化後推論比較截圖 (Jetson端，Desktop, FP16先跑)
-│   ├── Comp_Jetson_aft_summary-2.png  # 優化後推論比較截圖 (Jetson端，Desktop, FP32先跑)
-│   └── RPi5_inference_GPIO.png        # RPi5 (GPIO) 推論 summary 截圖
+│   └── QAT_CPU.py               # INT8 QAT
 │
 ├── validation_backup/           # 推論用驗證照片
 │

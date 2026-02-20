@@ -1,0 +1,14 @@
+Script started on 2026-02-17 23:46:16+0800
+amuro@Jnano:~/Desktop/Onnx_bfr$ sudo rebootbash reboot_CLI.sh ls[K
+binding.cpp         fp32_benchmark.csv  list.json        reboot_CLI.sh   Steady.sh
+class_indices.json  fp32.trt            mem_log.txt      reboot_cold.sh  [0m[01;34mTemp[0m
+[01;34mDesktop[0m             infer.cpp           process_CLI.sh   session.log     [01;32mtrt_infer.cpython-36m-aarch64-linux-gnu.so[0m
+fp16.trt            infer.py            process_cold.sh  setup.py        [01;34mvalidation_backup[0m
+amuro@Jnano:~/Desktop/Onnx_bfr$ lssudo rebootbash reboot_CLI.sh 
+amuro@Jnano:~/Desktop/Onnx_bfr$ bash process_CLI.sh 
+[sudo] password for amuro: 
+amuro@Jnano:~/Desktop/Onnx_bfr$ bash Steady.sh 
+amuro@Jnano:~/Desktop/Onnx_bfr$ exit
+exit
+
+Script done on 2026-02-17 23:51:23+0800
