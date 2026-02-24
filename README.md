@@ -49,6 +49,7 @@ https://youtube.com/shorts/biKfEp-H_zw
 - 適合長時間穩定運行的邊緣任務
 
 ## Part II. RPi5 vs Jetson Nano 性能比較
+- 比較RPi5, Jetson 記憶體優化前(JetBefore), Jetson 記憶體優化後(JetAfter)之推論效能
 - 分析 reboot / process cold 與 steady latency
 - 強調記憶體與 runtime 行為對事件驅動延遲的影響
 
